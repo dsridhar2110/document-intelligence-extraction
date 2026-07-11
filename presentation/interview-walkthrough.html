@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Document Intelligence — Interview Walkthrough</title>
+<style>
+  :root{
+    --ground:#08262B; --ground2:#0C343A; --teal:#0E8A92; --teal-bright:#24C9D0;
+    --paper:#fff; --surface:#F1F6F6; --ink:#0A2226; --ink-soft:#47656B;
+    --line:#D7E4E4; --amber:#C67F14; --amber-soft:#FFF7E8; --crit:#D64545; --good:#1F9E78;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:0 clamp(1rem,4vw,2rem)}
+  h1,h2,h3{letter-spacing:-.015em;line-height:1.2;margin:0}
+  p{margin:0}
+  code{font-family:var(--mono);font-size:.85em;background:rgba(14,138,146,.09);padding:.1em .35em;border-radius:4px}
+  .hero{background:linear-gradient(160deg,var(--ground) 0%,var(--ground2) 55%,#0E5560 100%);color:#E9F4F4;border-bottom:3px solid var(--teal)}
+  .hero .wrap{padding:3.2rem 0 2.6rem}
+  .hero .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-bright)}
+  .hero h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin-top:.7rem}
+  .hero p.sub{margin-top:.9rem;max-width:64ch;color:#C9DFE0;font-size:1.05rem}
+  .hero .btns{margin-top:1.5rem;display:flex;gap:.7rem;flex-wrap:wrap}
+  .hero a{display:inline-block;text-decoration:none;font-weight:700;font-size:.92rem;padding:.6rem 1.1rem;border-radius:9px}
+  .hero a.primary{background:var(--teal-bright);color:var(--ground)}
+  .hero a.ghost{border:1px solid rgba(233,244,244,.4);color:#E9F4F4}
+  .badge{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(198,127,20,.18);color:#F0C36B;border:1px solid rgba(198,127,20,.5);padding:.2rem .5rem;border-radius:6px;margin-top:1rem}
+  section{padding:2.6rem 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem}
+  h2{font-size:1.55rem;margin-bottom:1rem}
+  .lead{max-width:70ch}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:.9rem;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:1rem 1.15rem;margin-top:.7rem}
+  .step .n{font-family:var(--mono);font-weight:800;color:var(--teal);font-size:1rem;padding-top:.1rem}
+  b.term{color:var(--teal)} .step .t{font-weight:700}
+  .step .why{color:var(--ink-soft);font-size:.92rem;margin-top:.3rem}
+  .say{background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:1.1rem 1.2rem;margin-top:.8rem}
+  .say .q{font-weight:800;font-size:1rem}
+  .say .a{border-left:3px solid var(--teal);background:rgba(14,138,146,.06);padding:.7rem 1rem;border-radius:0 9px 9px 0;margin-top:.6rem}
+  .say .terms{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);margin-top:.5rem}
+  .understand{background:var(--amber-soft);border-left:3px solid var(--amber);padding:.7rem 1rem;border-radius:0 9px 9px 0;margin-top:.6rem;font-size:.95rem}
+  .understand b{color:#7C4A03}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:.8rem}
+  th{text-align:left;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:.6rem .9rem;background:var(--surface);border-bottom:1px solid var(--line)}
+  td{padding:.6rem .9rem;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  details{background:var(--paper);border:1px solid var(--line);border-radius:11px;margin-top:.6rem;overflow:hidden}
+  summary{cursor:pointer;padding:.85rem 1.1rem;font-weight:700;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--teal)}
+  details[open] summary::before{content:"▾ "}
+  details .body{padding:0 1.1rem 1rem}
+  details .body .land{font-size:.85rem;color:var(--ink-soft);margin-top:.5rem}
+  .callout{background:var(--ground);color:#E9F4F4;border-radius:12px;padding:1.2rem 1.4rem;margin-top:1.2rem}
+  .callout b{color:var(--teal-bright)}
+  .footer{padding:1.6rem 0 3rem;color:var(--ink-soft);font-size:.8rem}
+  @media print{.hero a{display:none}details{page-break-inside:avoid}details:not([open]) .body{display:block!important}}
+</style>
+</head>
+<body>
+
+<!-- 1. HERO -->
+<header class="hero"><div class="wrap">
+  <p class="kicker">Interview walkthrough · Document Intelligence · v1</p>
+  <h1>Document Intelligence — I taught the pipeline to read documents so people don't have to</h1>
+  <p class="sub">It takes messy financial documents — normal PDFs, <b>scanned</b> PDFs, even a web page —
+    and turns each one into a clean row of data: company, period, revenue, profit. It only asks a human
+    when it isn't sure. Built as the "automated sourcing and extraction" piece of a financial data platform.</p>
+  <div class="btns">
+    <a class="primary" href="#">Open the live demo →</a>
+    <a class="ghost" href="https://github.com/dsridhar2110/document-intelligence-extraction">Code / repo</a>
+  </div>
+  <div><span class="badge">Status: in progress — metrics being finalised</span></div>
+</div></header>
+
+<!-- 2. WHAT THIS PROJECT IS FOR -->
+<section><div class="wrap">
+  <p class="eyebrow">01 · What this project is for</p>
+  <h2>The problem, in one breath</h2>
+  <p class="lead">A financial-analytics platform is only as good as the data feeding it — and a huge amount of
+    that data arrives as <b>documents</b>: filings, annual reports, scanned statements. Someone has to read them
+    and type the numbers in. That's slow, expensive, and it doesn't scale as the pile of documents grows. So I
+    built a pipeline that <b>reads the document instead</b> — it pulls out the key figures, checks them, and hands
+    back a tidy record. If it isn't confident, it flags the document for a person rather than guessing. It's a
+    small, honest version of the <b>sourcing-and-extraction</b> capability at the heart of a data-management framework —
+    exactly what the LSEG role is about.</p>
+</div></section>
+
+<!-- 3. THE WHOLE THING, SIMPLY -->
+<section><div class="wrap">
+  <p class="eyebrow">02 · The whole thing, simply</p>
+  <h2>What I built, step by step</h2>
+
+  <div class="step"><span class="n">1</span><div>
+    <p class="t">I fetch the documents automatically.</p>
+    <p>A little <b class="term">scraper</b> pulls the source files — company filings and reports — and logs where each
+      one came from (URL, time). That's the <b class="term">sourcing / crawling</b> part.</p>
+    <p class="why">Why it matters: the pipeline starts itself; nobody hand-downloads files.</p>
+  </div></div>
+
+  <div class="step"><span class="n">2</span><div>
+    <p class="t">I turn the document into text — even the scanned ones.</p>
+    <p>Normal PDFs already contain text, so I read it directly. <b>Scanned</b> PDFs are just pictures, so I run
+      <b class="term">OCR</b> (optical character recognition) — software that "reads" the image and gives back the words.
+      That's the hard bit most tools skip.</p>
+    <p class="why">Why it matters: real document piles are always a mix of clean files and scans.</p>
+  </div></div>
+
+  <div class="step"><span class="n">3</span><div>
+    <p class="t">An LLM pulls out the fields — but grounded, not guessing.</p>
+    <p>I give a <b class="term">large language model</b> a strict instruction: "from this text, return the company,
+      period, revenue, net income, EPS and currency, as JSON." To keep it honest on long documents I use
+      <b class="term">RAG</b> — I first <i>retrieve</i> the relevant page, then ask, so it answers from the actual document
+      rather than memory. The answer must fit a fixed <b class="term">schema</b> (<code>src/schema.py</code>).</p>
+    <p class="why">Why it matters: "structured outputs + RAG" is what turns an LLM from a chatbot into a reliable extractor.</p>
+  </div></div>
+
+  <div class="step"><span class="n">4</span><div>
+    <p class="t">I check the answer before I trust it.</p>
+    <p><b class="term">Validation guardrails</b>: revenue can't be negative, the currency must be a real code, the period must
+      look like a period, and net income shouldn't exceed revenue. Anything that fails — or where the model's confidence
+      is low — is routed to a <b class="term">human-review</b> queue instead of flowing straight through.</p>
+    <p class="why">Why it matters: in a regulated, financial setting, "flag it for a human" beats "guess confidently".</p>
+  </div></div>
+
+  <div class="step"><span class="n">5</span><div>
+    <p class="t">A small screen for the human reviewer.</p>
+    <p>A <b class="term">Streamlit</b> table shows the flagged documents side by side with the extracted numbers, so a person
+      confirms or corrects in seconds. Everything else is already done.</p>
+  </div></div>
+</div></section>
+
+<!-- 4. IF I CAN'T SHARE MY SCREEN -->
+<section><div class="wrap">
+  <p class="eyebrow">03 · If I can't share my screen</p>
+  <h2>Said out loud</h2>
+  <div class="say"><p class="q">What model did you use, and why?</p>
+    <div class="a">A hosted large language model, but with two seatbelts on it. First, RAG — I retrieve the right
+      part of the document and feed only that in, so it answers from the real text. Second, structured outputs — the
+      model has to return JSON that fits a fixed schema, and I validate that schema before I accept anything. I didn't
+      train a model; extraction like this is better solved with good prompting plus guardrails, and it's far easier to explain and audit.</div>
+    <p class="terms">key terms: LLM · RAG (retrieval-augmented generation) · structured outputs · prompt engineering</p></div>
+  <div class="say"><p class="q">How did you know it worked? (evaluation)</p>
+    <div class="a">I hand-labelled a small gold set — the correct numbers for ~15–20 documents — and measured
+      field-level accuracy against it. I also track how many documents go straight through versus how many get sent
+      to a human. Those two numbers are the honest scorecard.</div>
+    <p class="terms">key terms: gold set · field-level accuracy / F1 · straight-through rate</p></div>
+  <div class="say"><p class="q">What other techniques did you use?</p>
+    <div class="a">OCR for the scanned files, a simple rule/regex baseline to compare the LLM against, and validation
+      rules as post-processing. The baseline matters — it proves the LLM is actually earning its place.</div>
+    <p class="terms">key terms: OCR · baseline · post-processing / guardrails</p></div>
+</div></section>
+
+<!-- 5. WHAT EVERY SCREEN/CHART MEANS -->
+<section><div class="wrap">
+  <p class="eyebrow">04 · What every screen/chart means</p>
+  <h2>Each view, two ways</h2>
+
+  <p><b>The extraction table (document → fields)</b></p>
+  <p class="lead"><b>In the interview:</b> each row is one document turned into structured data — the numbers the model
+    pulled out, with a confidence and a pass/flag status.</p>
+  <div class="understand"><b>🔍 For my understanding:</b> this is the whole point of the project made visible — a picture
+    became a row of clean data. The status column is the trust: green means "checked and safe", amber means "a human should look".
+    <b>Why a status at all?</b> because being right most of the time isn't enough in finance — you have to <i>know</i> which ones you're unsure about.</div>
+
+  <p style="margin-top:1.3rem"><b>The accuracy scorecard (gold set)</b></p>
+  <p class="lead"><b>In the interview:</b> field-level accuracy against my hand-labelled answers, plus the straight-through rate.</p>
+  <div class="understand"><b>🔍 For my understanding:</b> accuracy is "of all the numbers it pulled, how many matched the truth I wrote down."
+    <b>Why field-level, not document-level?</b> because getting 5 of 6 fields right on a document is useful — a whole-document
+    pass/fail would hide that. And the straight-through rate is really a business number: how much manual typing did I actually remove?</div>
+</div></section>
+
+<!-- 6. THE STRUCTURE TO LEAN ON -->
+<section><div class="wrap">
+  <p class="eyebrow">05 · The structure to lean on</p>
+  <h2>The 6 beats</h2>
+  <table><thead><tr><th>Beat</th><th>This project</th></tr></thead><tbody>
+    <tr><td>1 · Data</td><td>Public financial filings — a mix of native and scanned PDFs, plus a few web pages</td></tr>
+    <tr><td>2 · Clean-up</td><td>OCR the scans, extract text from native PDFs, retrieve the relevant section</td></tr>
+    <tr><td>3 · Model</td><td>LLM + RAG returning schema-validated JSON (company, period, revenue, net income, EPS, currency)</td></tr>
+    <tr><td>4 · How it did</td><td>Field-level accuracy / F1 on a hand-labelled gold set <i>(finalising)</i></td></tr>
+    <tr><td>5 · Baseline</td><td>Rule/regex extraction — brittle on layout changes; the LLM has to beat it</td></tr>
+    <tr><td>6 · Next move</td><td>Fine-tuned extractor, table-structure recognition, a knowledge-graph over entities</td></tr>
+  </tbody></table>
+</div></section>
+
+<!-- 7. IF I DO SHARE MY SCREEN -->
+<section><div class="wrap">
+  <p class="eyebrow">06 · If I DO share my screen</p>
+  <h2>Click-path</h2>
+  <p class="lead">1 · Show one scanned PDF (the ugly input). 2 · Run it → watch it become a clean row.
+    3 · Open a low-confidence one → show it landing in the human-review queue. 4 · Show the scorecard.
+    Keep it to four clicks; let the "picture → data" moment land.</p>
+</div></section>
+
+<!-- 8. THE CONVERSATION -->
+<section><div class="wrap">
+  <p class="eyebrow">07 · The conversation</p>
+  <h2>They ask / I'd say</h2>
+
+  <details><summary>Why an LLM and not just regex or a template?</summary><div class="body">
+    <p>Regex works until the layout changes — a different filing format and it breaks. The LLM reads meaning, not
+      position, so it survives messy, varied documents. But I keep the regex as a baseline to prove the LLM is worth its cost.</p>
+    <p class="land">Land this: "meaning, not position." · For me: that's exactly why it generalises across document types.</p></div></details>
+
+  <details><summary>What is RAG, really?</summary><div class="body">
+    <p>Retrieval-Augmented Generation. Instead of dumping a 200-page report into the model and hoping, I first fetch
+      the few relevant chunks, then ask the model using only those. It grounds the answer in the real document and keeps it cheap.</p>
+    <p class="land">For me: retrieve first, then generate — that's the whole idea.</p></div></details>
+
+  <details><summary>How do you stop it hallucinating a number?</summary><div class="body">
+    <p>Three ways: RAG grounds it in the actual text; structured outputs force it into a fixed schema; and validation
+      rules catch the impossible (negative revenue, profit bigger than revenue, a fake currency). Low confidence or a
+      failed rule means a human looks — I never let a shaky number flow straight through.</p>
+    <p class="land">Land this: "ground it, constrain it, check it, and when in doubt ask a human."</p></div></details>
+
+  <details><summary>Why measure a "straight-through rate"?</summary><div class="body">
+    <p>Because that's the business value in one number: the share of documents that needed no human at all. Accuracy
+      says it's right; straight-through says how much manual work it actually removed.</p></div></details>
+
+  <details><summary>What would you do to make this production-grade?</summary><div class="body">
+    <p>Fine-tune an extractor on more labelled docs, add table-structure recognition for statements, monitor extraction
+      accuracy over time (drift), and put the whole thing behind versioning and CI — the MLOps wrapper.</p></div></details>
+</div></section>
+
+<!-- 9. THE SAME IDEA AT LSEG -->
+<section><div class="wrap">
+  <p class="eyebrow">08 · The same idea at LSEG</p>
+  <h2>How this bridges to the job</h2>
+  <p class="lead">LSEG's whole business is turning the world's financial information into clean, reliable data. A data-management
+    framework has to <b>acquire, clean and transform</b> content at scale — and a lot of that content is unstructured documents.
+    This project is that exact first mile: source → extract → structure → validate, with a human in the loop where it matters.</p>
+  <div class="callout"><b>The honest framing:</b> this is a toy next to LSEG's real pipelines — a handful of documents, not
+    millions. But it's the same shape, I measured it honestly, and it taught me where the hard parts really are: the scans,
+    the validation, and knowing when <i>not</i> to trust the model.</div>
+</div></section>
+
+<!-- 10. ONE THING WORTH KNOWING COLD -->
+<section><div class="wrap">
+  <p class="eyebrow">09 · One thing worth knowing cold</p>
+  <h2>What "structured / semi-structured / unstructured" means</h2>
+  <p class="lead"><b>Structured</b> data already sits in neat rows and columns (a database table). <b>Semi-structured</b> has
+    some tags but no fixed table (JSON, a form). <b>Unstructured</b> is free-form — the text of a PDF, a scanned page.
+    This whole project is a machine for moving data from the unstructured end to the structured end. Say that sentence and you've said the point.</p>
+</div></section>
+
+<footer class="footer"><div class="wrap">Independent portfolio project · interview preparation · public/synthetic financial documents · not affiliated with LSEG.</div></footer>
+</body>
+</html>

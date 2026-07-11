@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Env / secrets
+.env
+*.key
+
+# Data & artifacts (commit small samples only, under samples/)
+data/
+*.parquet
+*.csv
+*.pdf
+!samples/*.pdf
+models/
+*.pkl
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Node / build (if a web demo is added)
+node_modules/
+.next/
+dist/
+build/

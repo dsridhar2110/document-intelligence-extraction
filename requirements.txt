@@ -1,0 +1,17 @@
+# Core (tests run on std-lib + pytest alone)
+pytest
+
+# Extraction stack (uncomment as stages land)
+# pdfplumber
+# pymupdf
+# pytesseract
+# python-doctr
+# requests
+# beautifulsoup4
+
+# Structuring (LLM + RAG)
+# openai            # or anthropic
+# pydantic
+
+# Review UI
+# streamlit
